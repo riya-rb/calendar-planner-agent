@@ -44,6 +44,7 @@ def check_availability(
 ) -> Optional[Tuple[datetime, datetime]]:
     """Find the first available slot on a given day using 30-minute increments."""
     duration = timedelta(hours=duration_hours)
+    now = datetime.now()
     target_day = target_date.date()
     day_events = get_events(
         events,
@@ -56,6 +57,9 @@ def check_availability(
     search_start_hour = _get_search_start_hour(prefs)
     day_start = datetime.combine(target_day, time(hour=max(prefs.work_start_hour, search_start_hour)))
     day_end = datetime.combine(target_day, time(hour=prefs.work_end_hour))
+
+    if target_day == now.date():
+        day_start = max(day_start, _round_up_to_next_half_hour(now))
 
     current_start = day_start
     while current_start + duration <= day_end:
@@ -70,7 +74,8 @@ def check_availability(
 def schedule_event(events: List[Event], task: Task, prefs: UserPreferences) -> Optional[Event]:
     """Schedule a task between today and its deadline using simple priority rules."""
     today = datetime.now().date()
-    deadline_day = task.deadline.date()
+    effective_deadline = _effective_deadline(task.deadline)
+    deadline_day = effective_deadline.date()
 
     if deadline_day < today:
         LOGGER.warning("Could not schedule task %r: deadline %s has already passed.", task.title, deadline_day)
@@ -90,7 +95,7 @@ def schedule_event(events: List[Event], task: Task, prefs: UserPreferences) -> O
             continue
 
         slot_start, slot_end = slot
-        if slot_end > task.deadline:
+        if slot_end > effective_deadline:
             continue
 
         scheduled_event = Event(
@@ -103,7 +108,7 @@ def schedule_event(events: List[Event], task: Task, prefs: UserPreferences) -> O
         events.append(scheduled_event)
         return scheduled_event
 
-    LOGGER.warning("Could not schedule task %r before deadline %s.", task.title, task.deadline.isoformat())
+    LOGGER.warning("Could not schedule task %r before deadline %s.", task.title, effective_deadline.isoformat())
     return None
 
 
@@ -118,9 +123,10 @@ def baseline_fcfs_scheduler(
 
     for task in tasks:
         effective_prefs = _merge_task_preferences(task, prefs)
+        effective_deadline = _effective_deadline(task.deadline)
         scheduled_event: Optional[Event] = None
 
-        for candidate_day in _daterange(today, task.deadline.date()):
+        for candidate_day in _daterange(today, effective_deadline.date()):
             slot = check_availability(
                 events=events,
                 target_date=datetime.combine(candidate_day, time.min),
@@ -131,7 +137,7 @@ def baseline_fcfs_scheduler(
                 continue
 
             slot_start, slot_end = slot
-            if slot_end > task.deadline:
+            if slot_end > effective_deadline:
                 continue
 
             scheduled_event = Event(
@@ -146,7 +152,11 @@ def baseline_fcfs_scheduler(
             break
 
         if scheduled_event is None:
-            LOGGER.warning("FCFS scheduler could not place task %r before deadline %s.", task.title, task.deadline)
+            LOGGER.warning(
+                "FCFS scheduler could not place task %r before deadline %s.",
+                task.title,
+                effective_deadline,
+            )
 
     return scheduled_events
 
@@ -187,6 +197,23 @@ def _generate_event_id(events: List[Event]) -> str:
         if candidate not in used_ids:
             return candidate
         next_index += 1
+
+
+def _effective_deadline(deadline: datetime) -> datetime:
+    if deadline.time() == time(0, 0):
+        return datetime.combine(deadline.date(), time(23, 59, 59))
+    return deadline
+
+
+def _round_up_to_next_half_hour(value: datetime) -> datetime:
+    rounded = value.replace(second=0, microsecond=0)
+    minute_remainder = rounded.minute % 30
+
+    if minute_remainder == 0 and value.second == 0 and value.microsecond == 0:
+        return rounded
+
+    minutes_to_add = 30 if minute_remainder == 0 else 30 - minute_remainder
+    return rounded + timedelta(minutes=minutes_to_add)
 
 
 if __name__ == "__main__":

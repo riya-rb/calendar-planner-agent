@@ -1,0 +1,214 @@
+{
+  "timestamp": "2026-04-25T17:33:08.351794",
+  "scenario_count": 5,
+  "agent": {
+    "scheduling_accuracy": 100.0,
+    "preference_satisfaction": 50.0,
+    "conflict_free_rate": 100.0,
+    "counts": {
+      "accuracy_passes": 5,
+      "total": 5,
+      "preference_matches": 1,
+      "preference_total": 2,
+      "conflict_free_passes": 5
+    }
+  },
+  "fcfs_baseline": {
+    "scheduling_accuracy": 100.0,
+    "preference_satisfaction": 0.0,
+    "conflict_free_rate": 100.0,
+    "counts": {
+      "accuracy_passes": 5,
+      "total": 5,
+      "preference_matches": 0,
+      "preference_total": 2,
+      "conflict_free_passes": 5
+    }
+  },
+  "scenario_details": {
+    "agent": [
+      {
+        "scenario_id": 1,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_3",
+          "title": "problem set 3",
+          "start": "2026-04-26T08:00:00",
+          "end": "2026-04-26T10:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": true,
+        "preference_match": true,
+        "mode": "agent"
+      },
+      {
+        "scenario_id": 2,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_4",
+          "title": "Read two papers for Wednesday seminar",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T19:30:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "agent"
+      },
+      {
+        "scenario_id": 3,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_5",
+          "title": "Submit project proposal",
+          "start": "2026-04-26T08:00:00",
+          "end": "2026-04-26T09:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "agent"
+      },
+      {
+        "scenario_id": 4,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_5",
+          "title": "final project presentation",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T21:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": true,
+        "preference_match": false,
+        "mode": "agent"
+      },
+      {
+        "scenario_id": 5,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_4",
+          "title": "Review lecture notes from this week",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T19:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "agent"
+      }
+    ],
+    "fcfs_baseline": [
+      {
+        "scenario_id": 1,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_3",
+          "title": "problem set 3",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T20:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": true,
+        "preference_match": false,
+        "mode": "fcfs_baseline"
+      },
+      {
+        "scenario_id": 2,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_4",
+          "title": "Read two papers for Wednesday seminar",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T19:30:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "fcfs_baseline"
+      },
+      {
+        "scenario_id": 3,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_5",
+          "title": "Submit project proposal",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T19:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "fcfs_baseline"
+      },
+      {
+        "scenario_id": 4,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_5",
+          "title": "final project presentation",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T21:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": true,
+        "preference_match": false,
+        "mode": "fcfs_baseline"
+      },
+      {
+        "scenario_id": 5,
+        "scheduled": true,
+        "scheduled_event": {
+          "id": "scheduled_4",
+          "title": "Review lecture notes from this week",
+          "start": "2026-04-25T18:00:00",
+          "end": "2026-04-25T19:00:00",
+          "recurring": false
+        },
+        "scheduling_pass": true,
+        "conflict_free": true,
+        "before_deadline": true,
+        "duration_match": true,
+        "preference_applicable": false,
+        "preference_match": null,
+        "mode": "fcfs_baseline"
+      }
+    ]
+  }
+}
