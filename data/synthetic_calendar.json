@@ -1,0 +1,10 @@
+[
+  {"id": "e1", "title": "CS6740 Lecture", "start": "2026-04-21T09:00:00", "end": "2026-04-21T10:30:00", "recurring": true},
+  {"id": "e2", "title": "Team standup",   "start": "2026-04-21T11:00:00", "end": "2026-04-21T11:30:00", "recurring": false},
+  {"id": "e3", "title": "Office hours",   "start": "2026-04-22T14:00:00", "end": "2026-04-22T15:00:00", "recurring": false},
+  {"id": "e4", "title": "ML project mtg", "start": "2026-04-23T13:00:00", "end": "2026-04-23T14:00:00", "recurring": false},
+  {"id": "e5", "title": "Gym",            "start": "2026-04-24T07:00:00", "end": "2026-04-24T08:00:00", "recurring": true},
+  {"id": "e6", "title": "CS6740 Lecture", "start": "2026-04-23T09:00:00", "end": "2026-04-23T10:30:00", "recurring": true},
+  {"id": "e7", "title": "Study group",    "start": "2026-04-24T15:00:00", "end": "2026-04-24T17:00:00", "recurring": false},
+  {"id": "e8", "title": "CS6740 Lecture", "start": "2026-04-25T09:00:00", "end": "2026-04-25T10:30:00", "recurring": true}
+]

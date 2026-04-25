@@ -1,0 +1,61 @@
+[
+  {
+    "scenario_id": 1,
+    "description": "Basic scheduling with morning preference",
+    "existing_events": ["e1", "e2"],
+    "task_input": "Finish problem set 3, due Wednesday, takes 2 hours, high priority, prefer mornings",
+    "expected": {
+      "title": "Finish problem set 3",
+      "deadline": "2026-04-22",
+      "duration_hours": 2,
+      "priority": "high",
+      "preferred_time": "morning",
+      "valid_slot_start_before": "2026-04-22T12:00:00",
+      "must_not_conflict_with": ["e1", "e2"]
+    }
+  },
+  {
+    "scenario_id": 2,
+    "description": "Conflict avoidance — slot must skip over office hours",
+    "existing_events": ["e1", "e2", "e3"],
+    "task_input": "Read two papers for Wednesday seminar, 90 minutes, medium priority",
+    "expected": {
+      "duration_hours": 1.5,
+      "priority": "medium",
+      "must_not_conflict_with": ["e1", "e2", "e3"]
+    }
+  },
+  {
+    "scenario_id": 3,
+    "description": "Tight deadline forces next available slot regardless of preference",
+    "existing_events": ["e1", "e2", "e3", "e4"],
+    "task_input": "Submit project proposal by tomorrow noon, 1 hour, urgent",
+    "expected": {
+      "priority": "high",
+      "scheduled_before": "2026-04-22T12:00:00",
+      "must_not_conflict_with": ["e1", "e2", "e3", "e4"]
+    }
+  },
+  {
+    "scenario_id": 4,
+    "description": "Long task requires splitting or finding a 3-hour block",
+    "existing_events": ["e4", "e5", "e6", "e7"],
+    "task_input": "Work on final project presentation, 3 hours, due Friday, prefer afternoons",
+    "expected": {
+      "duration_hours": 3,
+      "preferred_time": "afternoon",
+      "must_not_conflict_with": ["e4", "e5", "e6", "e7"]
+    }
+  },
+  {
+    "scenario_id": 5,
+    "description": "Recurring conflict — agent must find slot outside recurring lecture times",
+    "existing_events": ["e1", "e6", "e8"],
+    "task_input": "Review lecture notes from this week, 1 hour, low priority, mornings preferred",
+    "expected": {
+      "duration_hours": 1,
+      "priority": "low",
+      "must_not_conflict_with": ["e1", "e6", "e8"]
+    }
+  }
+]
