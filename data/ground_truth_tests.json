@@ -1,61 +1,268 @@
 [
   {
     "scenario_id": 1,
-    "description": "Basic scheduling with morning preference",
-    "existing_events": ["e1", "e2"],
-    "task_input": "Finish problem set 3, due Wednesday, takes 2 hours, high priority, prefer mornings",
+    "description": "Morning preferred but Monday morning is blocked, so the task should move to Tuesday morning.",
+    "category": "Preference with competing slots",
+    "existing_events": ["e18", "e19", "e20", "e21", "e24", "e25"],
+    "task_input": "Finish systems homework by Tuesday at 6pm, takes 2 hours, medium priority, prefer mornings.",
     "expected": {
-      "title": "Finish problem set 3",
-      "deadline": "2026-04-22",
-      "duration_hours": 2,
-      "priority": "high",
+      "deadline": "2026-04-28T18:00:00",
+      "duration_hours": 2.0,
+      "priority": "medium",
       "preferred_time": "morning",
-      "valid_slot_start_before": "2026-04-22T12:00:00",
-      "must_not_conflict_with": ["e1", "e2"]
+      "valid_slot_constraints": {
+        "preferred_day": "2026-04-28",
+        "preferred_window": "morning",
+        "latest_start": "2026-04-28T08:00:00"
+      },
+      "must_not_conflict_with": ["e18", "e19", "e20", "e21", "e24", "e25"]
     }
   },
   {
     "scenario_id": 2,
-    "description": "Conflict avoidance — slot must skip over office hours",
-    "existing_events": ["e1", "e2", "e3"],
-    "task_input": "Read two papers for Wednesday seminar, 90 minutes, medium priority",
+    "description": "Afternoon preferred but Tuesday and Thursday afternoons are blocked, so the scheduler should fall back to evening.",
+    "category": "Preference with competing slots",
+    "existing_events": ["e24", "e25", "e27", "e28", "e29"],
+    "task_input": "Draft the research memo by Thursday night, 2 hours, medium priority, prefer afternoons.",
     "expected": {
-      "duration_hours": 1.5,
+      "deadline": "2026-04-30T21:00:00",
+      "duration_hours": 2.0,
       "priority": "medium",
-      "must_not_conflict_with": ["e1", "e2", "e3"]
+      "preferred_time": "afternoon",
+      "valid_slot_constraints": {
+        "preferred_blocked_days": ["2026-04-28", "2026-04-30"],
+        "fallback_window": "evening"
+      },
+      "must_not_conflict_with": ["e24", "e25", "e27", "e28", "e29"]
     }
   },
   {
     "scenario_id": 3,
-    "description": "Tight deadline forces next available slot regardless of preference",
-    "existing_events": ["e1", "e2", "e3", "e4"],
-    "task_input": "Submit project proposal by tomorrow noon, 1 hour, urgent",
+    "description": "Evening preferred and evenings are mostly free, so the preference should be easy to satisfy.",
+    "category": "Preference with competing slots",
+    "existing_events": ["e5", "e6", "e7", "e8"],
+    "task_input": "Prepare discussion notes for Wednesday evening, 90 minutes, low priority, prefer evenings.",
     "expected": {
-      "priority": "high",
-      "scheduled_before": "2026-04-22T12:00:00",
-      "must_not_conflict_with": ["e1", "e2", "e3", "e4"]
+      "deadline": "2026-05-02T21:00:00",
+      "duration_hours": 1.5,
+      "priority": "low",
+      "preferred_time": "evening",
+      "valid_slot_constraints": {
+        "preferred_window": "evening"
+      },
+      "must_not_conflict_with": ["e5", "e6", "e7", "e8"]
     }
   },
   {
     "scenario_id": 4,
-    "description": "Long task requires splitting or finding a 3-hour block",
-    "existing_events": ["e4", "e5", "e6", "e7"],
-    "task_input": "Work on final project presentation, 3 hours, due Friday, prefer afternoons",
+    "description": "Urgency should override an evening preference when the deadline is only a couple of hours away.",
+    "category": "Urgency overrides preference",
+    "existing_events": ["e27", "e28", "e29"],
+    "task_input": "Submit the lab reflection by noon today, 1 hour, urgent, prefer evenings.",
     "expected": {
-      "duration_hours": 3,
-      "preferred_time": "afternoon",
-      "must_not_conflict_with": ["e4", "e5", "e6", "e7"]
+      "deadline": "2026-05-01T12:00:00",
+      "duration_hours": 1.0,
+      "priority": "high",
+      "preferred_time": "evening",
+      "valid_slot_constraints": {
+        "should_ignore_preference": true,
+        "latest_end": "2026-04-30T12:00:00"
+      },
+      "must_not_conflict_with": ["e27", "e28", "e29"]
     }
   },
   {
     "scenario_id": 5,
-    "description": "Recurring conflict — agent must find slot outside recurring lecture times",
-    "existing_events": ["e1", "e6", "e8"],
-    "task_input": "Review lecture notes from this week, 1 hour, low priority, mornings preferred",
+    "description": "A high priority task should accept a non-preferred slot if the preferred afternoon slot is already taken.",
+    "category": "Urgency overrides preference",
+    "existing_events": ["e27", "e28", "e29", "e30"],
+    "task_input": "Finish the project slides by Friday at 5pm, 2 hours, high priority, prefer afternoons.",
     "expected": {
-      "duration_hours": 1,
+      "deadline": "2026-05-01T17:00:00",
+      "duration_hours": 2.0,
+      "priority": "high",
+      "preferred_time": "afternoon",
+      "valid_slot_constraints": {
+        "non_preferred_ok": true,
+        "must_finish_before": "2026-05-01T17:00:00"
+      },
+      "must_not_conflict_with": ["e27", "e28", "e29", "e30"]
+    }
+  },
+  {
+    "scenario_id": 6,
+    "description": "With multiple valid options, a high priority task should claim the better slot closer to the deadline.",
+    "category": "Priority ordering",
+    "existing_events": ["e24", "e25", "e27", "e28", "e29", "e30"],
+    "task_input": "Write the grant summary by Friday evening, 2 hours, high priority, prefer mornings.",
+    "expected": {
+      "deadline": "2026-05-01T18:00:00",
+      "duration_hours": 2.0,
+      "priority": "high",
+      "preferred_time": "morning",
+      "valid_slot_constraints": {
+        "preferred_day": "2026-05-01",
+        "preferred_window": "morning"
+      },
+      "must_not_conflict_with": ["e24", "e25", "e27", "e28", "e29", "e30"]
+    }
+  },
+  {
+    "scenario_id": 7,
+    "description": "A low priority task on the same horizon should be pushed into the leftover slot rather than the premium one.",
+    "category": "Priority ordering",
+    "existing_events": ["e24", "e25", "e27", "e28", "e29", "e30"],
+    "task_input": "Organize my notes by Friday evening, 2 hours, low priority, prefer mornings.",
+    "expected": {
+      "deadline": "2026-05-01T18:00:00",
+      "duration_hours": 2.0,
       "priority": "low",
-      "must_not_conflict_with": ["e1", "e6", "e8"]
+      "preferred_time": "morning",
+      "valid_slot_constraints": {
+        "likely_leftover_day": "2026-04-30"
+      },
+      "must_not_conflict_with": ["e24", "e25", "e27", "e28", "e29", "e30"]
+    }
+  },
+  {
+    "scenario_id": 8,
+    "description": "A medium priority task should land in a compromise slot when the best and earliest slots are both imperfect.",
+    "category": "Priority ordering",
+    "existing_events": ["e24", "e25", "e27", "e28", "e29", "e30"],
+    "task_input": "Polish the presentation by Friday at 6pm, 90 minutes, medium priority, prefer afternoons.",
+    "expected": {
+      "deadline": "2026-05-01T18:00:00",
+      "duration_hours": 1.5,
+      "priority": "medium",
+      "preferred_time": "afternoon",
+      "valid_slot_constraints": {
+        "compromise_window": "2026-05-01 afternoon"
+      },
+      "must_not_conflict_with": ["e24", "e25", "e27", "e28", "e29", "e30"]
+    }
+  },
+  {
+    "scenario_id": 9,
+    "description": "A packed Thursday has only one 90-minute gap before the deadline, and the scheduler should find it.",
+    "category": "Conflict navigation",
+    "existing_events": ["e9", "e10", "e11", "e12"],
+    "task_input": "Review the methods paper by Thursday at 3pm, 90 minutes, medium priority.",
+    "expected": {
+      "deadline": "2026-05-01T15:00:00",
+      "duration_hours": 1.5,
+      "priority": "medium",
+      "preferred_time": null,
+      "valid_slot_constraints": {
+        "exact_gap_start": "2026-04-23T11:00:00",
+        "exact_gap_end": "2026-04-23T12:30:00"
+      },
+      "must_not_conflict_with": ["e9", "e10", "e11", "e12"]
+    }
+  },
+  {
+    "scenario_id": 10,
+    "description": "A task longer than any available gap should return None gracefully instead of being forced into a conflict.",
+    "category": "Conflict navigation",
+    "existing_events": ["e9", "e10", "e11", "e12"],
+    "task_input": "Write the full seminar response by Thursday at 5pm, 3 hours, medium priority.",
+    "expected": {
+      "deadline": "2026-05-02T17:00:00",
+      "duration_hours": 3.0,
+      "priority": "medium",
+      "preferred_time": null,
+      "valid_slot_constraints": {
+        "should_return_none": true
+      },
+      "must_not_conflict_with": ["e9", "e10", "e11", "e12"]
+    }
+  },
+  {
+    "scenario_id": 11,
+    "description": "Back-to-back afternoon meetings on Thursday should push an afternoon task into the next day.",
+    "category": "Conflict navigation",
+    "existing_events": ["e27", "e28", "e29", "e30"],
+    "task_input": "Prepare interview stories by Friday night, 2 hours, medium priority, prefer afternoons.",
+    "expected": {
+      "deadline": "2026-05-01T21:00:00",
+      "duration_hours": 2.0,
+      "priority": "medium",
+      "preferred_time": "afternoon",
+      "valid_slot_constraints": {
+        "must_use_next_day": "2026-05-01",
+        "preferred_window": "afternoon"
+      },
+      "must_not_conflict_with": ["e27", "e28", "e29", "e30"]
+    }
+  },
+  {
+    "scenario_id": 12,
+    "description": "A vague natural-language request should still yield a reasonable deadline and duration.",
+    "category": "Parser stress tests",
+    "existing_events": ["e27", "e28", "e29"],
+    "task_input": "Work on the final report sometime before the weekend, couple hours.",
+    "expected": {
+      "deadline": "2026-05-01",
+      "duration_hours": 2.0,
+      "priority": "medium",
+      "preferred_time": null,
+      "valid_slot_constraints": {
+        "latest_day": "2026-05-01",
+        "parser_note": "relative deadline and vague duration"
+      },
+      "must_not_conflict_with": ["e27", "e28", "e29"]
+    }
+  },
+  {
+    "scenario_id": 13,
+    "description": "An ambiguous priority phrase such as 'pretty important' should map to a meaningful non-low priority level.",
+    "category": "Parser stress tests",
+    "existing_events": ["e18", "e19", "e20", "e21"],
+    "task_input": "I should probably polish my resume soon, it's pretty important, maybe an hour before Friday.",
+    "expected": {
+      "deadline": "2026-05-01",
+      "duration_hours": 1.0,
+      "priority": "medium",
+      "preferred_time": null,
+      "valid_slot_constraints": {
+        "acceptable_priorities": ["high", "medium"]
+      },
+      "must_not_conflict_with": ["e18", "e19", "e20", "e21"]
+    }
+  },
+  {
+    "scenario_id": 14,
+    "description": "A low-priority morning review task should avoid the recurring lecture blocks on Monday, Wednesday, and Friday.",
+    "category": "General regression",
+    "existing_events": ["e5", "e14", "e18", "e26", "e30"],
+    "task_input": "Review lecture notes by Friday, 1 hour, low priority, prefer mornings.",
+    "expected": {
+      "deadline": "2026-05-01",
+      "duration_hours": 1.0,
+      "priority": "low",
+      "preferred_time": "morning",
+      "valid_slot_constraints": {
+        "must_avoid_mwf_lecture_blocks": true,
+        "morning_if_available": true
+      },
+      "must_not_conflict_with": ["e5", "e14", "e18", "e26", "e30"]
+    }
+  },
+  {
+    "scenario_id": 15,
+    "description": "A three-hour task should be difficult but still schedulable when a long block exists on a lighter day.",
+    "category": "General regression",
+    "existing_events": ["e18", "e19", "e20", "e21", "e24", "e25"],
+    "task_input": "Build the capstone demo by Wednesday night, 3 hours, high priority, prefer afternoons.",
+    "expected": {
+      "deadline": "2026-04-29T21:00:00",
+      "duration_hours": 3.0,
+      "priority": "high",
+      "preferred_time": "afternoon",
+      "valid_slot_constraints": {
+        "requires_three_hour_block": true,
+        "acceptable_days": ["2026-04-29 afternoon", "2026-04-28 evening"]
+      },
+      "must_not_conflict_with": ["e18", "e19", "e20", "e21", "e24", "e25"]
     }
   }
 ]

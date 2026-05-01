@@ -117,29 +117,32 @@ def baseline_fcfs_scheduler(
     events: List[Event],
     prefs: UserPreferences,
 ) -> List[Event]:
-    """Schedule tasks in arrival order without any priority-based date ordering."""
+    """True first-come-first-served scheduler — ignores preferences entirely,
+    always takes the first available slot starting from work_start_hour."""
     scheduled_events: List[Event] = []
     today = datetime.now().date()
-
     for task in tasks:
-        effective_prefs = _merge_task_preferences(task, prefs)
         effective_deadline = _effective_deadline(task.deadline)
         scheduled_event: Optional[Event] = None
-
         for candidate_day in _daterange(today, effective_deadline.date()):
+            # Always start at work_start_hour — never checks preferred_time
+            blind_prefs = UserPreferences(
+                work_start_hour=prefs.work_start_hour,
+                work_end_hour=prefs.work_end_hour,
+                sleep_end_hour=prefs.sleep_end_hour,
+                preferred_time=None,  # explicitly ignore preference
+            )
             slot = check_availability(
                 events=events,
                 target_date=datetime.combine(candidate_day, time.min),
                 duration_hours=task.duration_hours,
-                prefs=effective_prefs,
+                prefs=blind_prefs,
             )
             if slot is None:
                 continue
-
             slot_start, slot_end = slot
             if slot_end > effective_deadline:
                 continue
-
             scheduled_event = Event(
                 id=_generate_event_id(events),
                 title=task.title,
@@ -150,14 +153,12 @@ def baseline_fcfs_scheduler(
             events.append(scheduled_event)
             scheduled_events.append(scheduled_event)
             break
-
         if scheduled_event is None:
             LOGGER.warning(
                 "FCFS scheduler could not place task %r before deadline %s.",
                 task.title,
                 effective_deadline,
             )
-
     return scheduled_events
 
 
