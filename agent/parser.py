@@ -41,24 +41,66 @@ def parse_events(raw_events: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def parse_task(user_input: str) -> Task:
     """Parse a single natural-language task description into a Task."""
+    return parse_task_strategy_a(user_input)
+
+
+def parse_task_strategy_a(user_input: str) -> Task:
+    """Strategy A: single-prompt JSON extraction."""
     if not user_input.strip():
-        raise ValueError("parse_task failed: user_input must not be empty.")
+        raise ValueError("parse_task_strategy_a failed: user_input must not be empty.")
 
     client = _build_groq_client()
-    initial_response = _request_task_json(client, user_input)
+    initial_response = _request_task_json(client, user_input, _build_strategy_a_system_prompt())
 
     try:
         payload = _parse_json_response(initial_response)
         return _task_from_payload(payload)
     except ValueError as first_error:
-        repaired_response = _request_json_correction(client, user_input, initial_response, first_error)
+        repaired_response = _request_json_correction(
+            client,
+            user_input,
+            initial_response,
+            first_error,
+            _build_strategy_a_system_prompt(),
+        )
 
         try:
             payload = _parse_json_response(repaired_response)
             return _task_from_payload(payload)
         except ValueError as second_error:
             raise ValueError(
-                "parse_task failed after retry: "
+                "parse_task_strategy_a failed after retry: "
+                f"could not convert model output into a valid Task. "
+                f"Initial error: {first_error}. Retry error: {second_error}."
+            ) from second_error
+
+
+def parse_task_strategy_b(user_input: str) -> Task:
+    """Strategy B: guided step-by-step reasoning with JSON-only final output."""
+    if not user_input.strip():
+        raise ValueError("parse_task_strategy_b failed: user_input must not be empty.")
+
+    client = _build_groq_client()
+    initial_response = _request_task_json(client, user_input, _build_strategy_b_system_prompt())
+
+    try:
+        payload = _parse_json_response(initial_response)
+        return _task_from_payload(payload)
+    except ValueError as first_error:
+        repaired_response = _request_json_correction(
+            client,
+            user_input,
+            initial_response,
+            first_error,
+            _build_strategy_b_system_prompt(),
+        )
+
+        try:
+            payload = _parse_json_response(repaired_response)
+            return _task_from_payload(payload)
+        except ValueError as second_error:
+            raise ValueError(
+                "parse_task_strategy_b failed after retry: "
                 f"could not convert model output into a valid Task. "
                 f"Initial error: {first_error}. Retry error: {second_error}."
             ) from second_error
@@ -92,8 +134,7 @@ def _build_groq_client() -> Any:
     return Groq(api_key=api_key)
 
 
-def _request_task_json(client: Any, user_input: str) -> str:
-    system_prompt = _build_system_prompt()
+def _request_task_json(client: Any, user_input: str, system_prompt: str) -> str:
     completion = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[
@@ -110,6 +151,7 @@ def _request_json_correction(
     user_input: str,
     invalid_response: str,
     error: Exception,
+    system_prompt: str,
 ) -> str:
     correction_prompt = (
         "Your previous response was invalid.\n"
@@ -120,7 +162,6 @@ def _request_json_correction(
         "Do not include markdown, comments, or extra text."
     )
 
-    system_prompt = _build_system_prompt()
     completion = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[
@@ -152,7 +193,7 @@ def _parse_json_response(response_text: str) -> Dict[str, Any]:
     return payload
 
 
-def _build_system_prompt() -> str:
+def _build_strategy_a_system_prompt() -> str:
     current_date_iso = datetime.now().date().isoformat()
     return f"""
 You extract structured task information for a calendar planner.
@@ -173,6 +214,42 @@ Required JSON schema:
 
 Rules:
 - Resolve relative dates like "Friday", "tomorrow", and "end of week" using today's date.
+- Normalize urgent wording to priority "high".
+- Convert vague durations like "a couple hours" to a reasonable float.
+- If no preferred time is stated, set preferred_time to null.
+- The output must be valid JSON parseable by Python's json.loads.
+""".strip()
+
+
+def _build_strategy_b_system_prompt() -> str:
+    current_date_iso = datetime.now().date().isoformat()
+    return f"""
+You extract structured task information for a calendar planner.
+Today's date is {current_date_iso}.
+
+Reason through the task internally using this sequence:
+Step 1: Identify the task title.
+Step 2: Identify the deadline and convert any relative dates to YYYY-MM-DD.
+Step 3: Estimate the duration in hours as a float.
+Step 4: Map urgency to one of high, medium, or low.
+Step 5: Map any time preference to morning, afternoon, evening, or null.
+
+Do not reveal your step-by-step reasoning.
+Return exactly one valid JSON object and nothing else.
+Do not use markdown fences.
+Do not add commentary, explanations, or extra keys.
+
+Required JSON schema:
+{{
+  "title": "string",
+  "deadline": "YYYY-MM-DD",
+  "duration_hours": 1.5,
+  "priority": "high" | "medium" | "low",
+  "preferred_time": "morning" | "afternoon" | "evening" | null
+}}
+
+Rules:
+- Resolve relative dates like "Friday", "tomorrow", "before the weekend", and "end of week" using today's date.
 - Normalize urgent wording to priority "high".
 - Convert vague durations like "a couple hours" to a reasonable float.
 - If no preferred time is stated, set preferred_time to null.

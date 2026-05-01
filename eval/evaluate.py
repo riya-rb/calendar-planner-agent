@@ -11,11 +11,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from dateutil.parser import isoparse
 
 from agent.models import Event, UserPreferences, load_calendar, load_ground_truth
-from agent.parser import parse_tasks_batch
+from agent.parser import parse_task_strategy_a, parse_task_strategy_b, parse_tasks_batch
 from agent.scheduler import baseline_fcfs_scheduler, detect_conflict, schedule_event
 from config import GROUND_TRUTH_PATH, SYNTHETIC_CALENDAR_PATH
 
 RESULTS_PATH = Path("eval/results.json")
+STRATEGY_RESULTS_PATH = Path("eval/strategy_comparison.json")
 PREFERENCE_WINDOWS = {
     "morning": (8, 12),
     "afternoon": (12, 17),
@@ -54,9 +55,12 @@ def run_evaluation() -> Dict[str, Any]:
             "fcfs_baseline": fcfs_rows,
         },
     }
+    strategy_comparison = _run_strategy_comparison(scenarios)
+    results["strategy_comparison"] = strategy_comparison
 
     _print_summary_table(results)
     _save_results(results)
+    _save_strategy_comparison(strategy_comparison)
     return results
 
 
@@ -168,6 +172,136 @@ def _print_summary_table(results: Dict[str, Any]) -> None:
 def _save_results(results: Dict[str, Any]) -> None:
     RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
     RESULTS_PATH.write_text(json.dumps(results, indent=2), encoding="utf-8")
+
+
+def _run_strategy_comparison(scenarios: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def parser_accuracy(parsed_task: Any, expected: Dict[str, Any]) -> Dict[str, bool]:
+        expected_deadline_raw = expected.get("deadline")
+        deadline_match = False
+        if expected_deadline_raw is not None:
+            expected_deadline = _coerce_deadline_to_end_of_day(expected_deadline_raw)
+            deadline_delta_days = abs((parsed_task.deadline - expected_deadline).total_seconds()) / 86400
+            deadline_match = deadline_delta_days <= 1
+
+        duration_match = abs(parsed_task.duration_hours - float(expected.get("duration_hours", 0.0))) <= 0.25
+
+        expected_priority = expected.get("priority")
+        acceptable_priorities = expected.get("valid_slot_constraints", {}).get("acceptable_priorities")
+        if acceptable_priorities:
+            priority_match = parsed_task.priority in acceptable_priorities
+        else:
+            priority_match = parsed_task.priority == expected_priority
+
+        preferred_time_match = parsed_task.preferred_time == expected.get("preferred_time")
+
+        overall_match = deadline_match and duration_match and priority_match and preferred_time_match
+        return {
+            "priority_match": priority_match,
+            "duration_match": duration_match,
+            "deadline_match": deadline_match,
+            "preferred_time_match": preferred_time_match,
+            "overall_match": overall_match,
+        }
+
+    def evaluate_strategy(
+        strategy_name: str,
+        parse_fn: Any,
+    ) -> Dict[str, Any]:
+        rows: List[Dict[str, Any]] = []
+        ambiguous_rows: List[Dict[str, Any]] = []
+
+        for scenario in scenarios:
+            expected = scenario.get("expected", {})
+            try:
+                parsed_task = parse_fn(scenario["task_input"])
+                accuracy = parser_accuracy(parsed_task, expected)
+                row = {
+                    "scenario_id": scenario["scenario_id"],
+                    "category": scenario.get("category"),
+                    "parsed": {
+                        "title": parsed_task.title,
+                        "deadline": parsed_task.deadline.isoformat(),
+                        "duration_hours": parsed_task.duration_hours,
+                        "priority": parsed_task.priority,
+                        "preferred_time": parsed_task.preferred_time,
+                    },
+                    **accuracy,
+                    "error": None,
+                }
+            except Exception as error:
+                row = {
+                    "scenario_id": scenario["scenario_id"],
+                    "category": scenario.get("category"),
+                    "parsed": None,
+                    "priority_match": False,
+                    "duration_match": False,
+                    "deadline_match": False,
+                    "preferred_time_match": False,
+                    "overall_match": False,
+                    "error": str(error),
+                }
+
+            rows.append(row)
+            if scenario.get("category") == "Parser stress tests":
+                ambiguous_rows.append(row)
+
+        return {
+            "name": strategy_name,
+            "priority_accuracy": _pct(sum(1 for row in rows if row["priority_match"]), len(rows)),
+            "duration_accuracy": _pct(sum(1 for row in rows if row["duration_match"]), len(rows)),
+            "deadline_accuracy": _pct(sum(1 for row in rows if row["deadline_match"]), len(rows)),
+            "overall_accuracy": _pct(sum(1 for row in rows if row["overall_match"]), len(rows)),
+            "ambiguous_input_accuracy": _pct(
+                sum(1 for row in ambiguous_rows if row["overall_match"]),
+                len(ambiguous_rows),
+            ),
+            "rows": rows,
+        }
+
+    strategy_a = evaluate_strategy("Strategy A", parse_task_strategy_a)
+    strategy_b = evaluate_strategy("Strategy B", parse_task_strategy_b)
+
+    print()
+    print("Parser strategy comparison")
+    print("Field          | Strategy A | Strategy B")
+    print("----------------------------------------")
+    print(
+        f"{'Priority acc.':<14} | "
+        f"{_fmt_pct(strategy_a['priority_accuracy']):<10} | "
+        f"{_fmt_pct(strategy_b['priority_accuracy'])}"
+    )
+    print(
+        f"{'Duration acc.':<14} | "
+        f"{_fmt_pct(strategy_a['duration_accuracy']):<10} | "
+        f"{_fmt_pct(strategy_b['duration_accuracy'])}"
+    )
+    print(
+        f"{'Deadline acc.':<14} | "
+        f"{_fmt_pct(strategy_a['deadline_accuracy']):<10} | "
+        f"{_fmt_pct(strategy_b['deadline_accuracy'])}"
+    )
+    print(
+        f"{'Overall':<14} | "
+        f"{_fmt_pct(strategy_a['overall_accuracy']):<10} | "
+        f"{_fmt_pct(strategy_b['overall_accuracy'])}"
+    )
+    print(
+        f"{'Ambiguous cat.':<14} | "
+        f"{_fmt_pct(strategy_a['ambiguous_input_accuracy']):<10} | "
+        f"{_fmt_pct(strategy_b['ambiguous_input_accuracy'])}"
+    )
+
+    return {
+        "timestamp": datetime.now().isoformat(),
+        "scenario_count": len(scenarios),
+        "strategy_a": strategy_a,
+        "strategy_b": strategy_b,
+    }
+
+
+def _save_strategy_comparison(results: Dict[str, Any]) -> None:
+    STRATEGY_RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STRATEGY_RESULTS_PATH.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
 
 def _shift_events_for_current_date(events: List[Event]) -> Tuple[List[Event], timedelta]:

@@ -1,0 +1,534 @@
+{
+  "timestamp": "2026-05-01T01:23:07.750002",
+  "scenario_count": 15,
+  "strategy_a": {
+    "name": "Strategy A",
+    "priority_accuracy": 93.33333333333333,
+    "duration_accuracy": 100.0,
+    "deadline_accuracy": 13.333333333333334,
+    "overall_accuracy": 6.666666666666667,
+    "ambiguous_input_accuracy": 0.0,
+    "rows": [
+      {
+        "scenario_id": 1,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "systems homework",
+          "deadline": "2026-05-05T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 2,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "Draft the research memo",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 3,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "Discussion Notes",
+          "deadline": "2026-05-06T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "low",
+          "preferred_time": "evening"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 4,
+        "category": "Urgency overrides preference",
+        "parsed": {
+          "title": "Submit lab reflection",
+          "deadline": "2026-05-01T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "high",
+          "preferred_time": "evening"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": true,
+        "preferred_time_match": true,
+        "overall_match": true,
+        "error": null
+      },
+      {
+        "scenario_id": 5,
+        "category": "Urgency overrides preference",
+        "parsed": {
+          "title": "Finish project slides",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "high",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 6,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "grant summary",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "high",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 7,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "Organize notes",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "low",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 8,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "Polish the presentation",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 9,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Review the methods paper",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": false,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 10,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Write the full seminar response",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 3.0,
+          "priority": "medium",
+          "preferred_time": null
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 11,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Prepare interview stories",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 12,
+        "category": "Parser stress tests",
+        "parsed": {
+          "title": "final report",
+          "deadline": "2026-05-02T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "low",
+          "preferred_time": null
+        },
+        "priority_match": false,
+        "duration_match": true,
+        "deadline_match": true,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 13,
+        "category": "Parser stress tests",
+        "parsed": {
+          "title": "Polish resume",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "high",
+          "preferred_time": null
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 14,
+        "category": "General regression",
+        "parsed": {
+          "title": "Review lecture notes",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "low",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 15,
+        "category": "General regression",
+        "parsed": {
+          "title": "Build the capstone demo",
+          "deadline": "2026-05-06T00:00:00",
+          "duration_hours": 3.0,
+          "priority": "high",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      }
+    ]
+  },
+  "strategy_b": {
+    "name": "Strategy B",
+    "priority_accuracy": 100.0,
+    "duration_accuracy": 100.0,
+    "deadline_accuracy": 20.0,
+    "overall_accuracy": 20.0,
+    "ambiguous_input_accuracy": 50.0,
+    "rows": [
+      {
+        "scenario_id": 1,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "Finish systems homework",
+          "deadline": "2026-05-05T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 2,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "Draft the research memo",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 3,
+        "category": "Preference with competing slots",
+        "parsed": {
+          "title": "Discussion Notes",
+          "deadline": "2026-05-06T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "low",
+          "preferred_time": "evening"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 4,
+        "category": "Urgency overrides preference",
+        "parsed": {
+          "title": "Submit the lab reflection",
+          "deadline": "2026-05-01T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "high",
+          "preferred_time": "evening"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": true,
+        "preferred_time_match": true,
+        "overall_match": true,
+        "error": null
+      },
+      {
+        "scenario_id": 5,
+        "category": "Urgency overrides preference",
+        "parsed": {
+          "title": "Finish the project slides",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "high",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 6,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "Write the grant summary",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "high",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 7,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "Organize notes",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "low",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 8,
+        "category": "Priority ordering",
+        "parsed": {
+          "title": "Polish the presentation",
+          "deadline": "2026-05-02T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": true,
+        "preferred_time_match": true,
+        "overall_match": true,
+        "error": null
+      },
+      {
+        "scenario_id": 9,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Review the methods paper",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 1.5,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": false,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 10,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Write the full seminar response",
+          "deadline": "2026-05-07T00:00:00",
+          "duration_hours": 3.0,
+          "priority": "medium",
+          "preferred_time": null
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 11,
+        "category": "Conflict navigation",
+        "parsed": {
+          "title": "Prepare interview stories",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 12,
+        "category": "Parser stress tests",
+        "parsed": {
+          "title": "final report",
+          "deadline": "2026-05-02T00:00:00",
+          "duration_hours": 2.0,
+          "priority": "medium",
+          "preferred_time": null
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": true,
+        "preferred_time_match": true,
+        "overall_match": true,
+        "error": null
+      },
+      {
+        "scenario_id": 13,
+        "category": "Parser stress tests",
+        "parsed": {
+          "title": "Polish resume",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "high",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": false,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 14,
+        "category": "General regression",
+        "parsed": {
+          "title": "Review lecture notes",
+          "deadline": "2026-05-08T00:00:00",
+          "duration_hours": 1.0,
+          "priority": "low",
+          "preferred_time": "morning"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      },
+      {
+        "scenario_id": 15,
+        "category": "General regression",
+        "parsed": {
+          "title": "Build the capstone demo",
+          "deadline": "2026-05-06T00:00:00",
+          "duration_hours": 3.0,
+          "priority": "high",
+          "preferred_time": "afternoon"
+        },
+        "priority_match": true,
+        "duration_match": true,
+        "deadline_match": false,
+        "preferred_time_match": true,
+        "overall_match": false,
+        "error": null
+      }
+    ]
+  }
+}
