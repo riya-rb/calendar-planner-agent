@@ -26,6 +26,7 @@ class Task:
     duration_hours: float
     priority: str
     preferred_time: Optional[str]
+    schedule_on_date: bool = False  # True = schedule ON this date, not before it
 
 
 @dataclass

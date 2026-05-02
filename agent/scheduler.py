@@ -82,7 +82,12 @@ def schedule_event(events: List[Event], task: Task, prefs: UserPreferences) -> O
         return None
 
     effective_prefs = _merge_task_preferences(task, prefs)
-    candidate_days = _build_candidate_days(today, deadline_day, task.priority)
+
+    # if user said "on May 20" only search that exact day
+    if getattr(task, 'schedule_on_date', False):
+        candidate_days = [deadline_day]
+    else:
+        candidate_days = _build_candidate_days(today, deadline_day, task.priority)
 
     for candidate_day in candidate_days:
         slot = check_availability(
@@ -110,7 +115,6 @@ def schedule_event(events: List[Event], task: Task, prefs: UserPreferences) -> O
 
     LOGGER.warning("Could not schedule task %r before deadline %s.", task.title, effective_deadline.isoformat())
     return None
-
 
 def baseline_fcfs_scheduler(
     tasks: List[Task],
@@ -162,6 +166,49 @@ def baseline_fcfs_scheduler(
     return scheduled_events
 
 
+def split_and_schedule(
+    task: Task,
+    events: List[Event],
+    prefs: UserPreferences,
+) -> List[Event]:
+    """Schedule a task directly, or split long tasks into two parts across different days."""
+    scheduled_event = schedule_event(events, task, prefs)
+    if scheduled_event is not None:
+        return [scheduled_event]
+
+    if task.duration_hours <= 2.0:
+        return []
+
+    chunk_duration = task.duration_hours / 2
+    chunk_one = Task(
+        title=f"{task.title} (part 1 of 2)",
+        deadline=task.deadline,
+        duration_hours=chunk_duration,
+        priority=task.priority,
+        preferred_time=task.preferred_time,
+    )
+    chunk_two = Task(
+        title=f"{task.title} (part 2 of 2)",
+        deadline=task.deadline,
+        duration_hours=chunk_duration,
+        priority=task.priority,
+        preferred_time=task.preferred_time,
+    )
+
+    first_part = schedule_event(events, chunk_one, prefs)
+    if first_part is None:
+        return []
+
+    second_part = schedule_event(events, chunk_two, prefs)
+    if second_part is not None and second_part.start.date() != first_part.start.date():
+        return [first_part, second_part]
+
+    if second_part is not None:
+        events.remove(second_part)
+    events.remove(first_part)
+    return []
+
+
 def _get_search_start_hour(prefs: UserPreferences) -> int:
     preferred_time = prefs.preferred_time if prefs.preferred_time in PREFERRED_START_HOURS else None
     if preferred_time is None:
@@ -178,8 +225,17 @@ def _merge_task_preferences(task: Task, prefs: UserPreferences) -> UserPreferenc
 def _build_candidate_days(start_day: date, end_day: date, priority: str) -> List[date]:
     days = list(_daterange(start_day, end_day))
     if priority.lower() == "high":
+        # high priority: search backwards from deadline (maximize buffer)
         return list(reversed(days))
-    return days
+    elif priority.lower() == "low":
+        # low priority: schedule as close to deadline as possible
+        return list(reversed(days))
+    else:
+        # medium priority: start 3 days before deadline, fall back earlier if needed
+        preferred_start = max(start_day, end_day - timedelta(days=3))
+        preferred_days = list(_daterange(preferred_start, end_day))
+        earlier_days = list(_daterange(start_day, preferred_start - timedelta(days=1)))
+        return list(reversed(preferred_days)) + list(reversed(earlier_days))
 
 
 def _daterange(start_day: date, end_day: date) -> List[date]:

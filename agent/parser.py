@@ -196,29 +196,35 @@ def _parse_json_response(response_text: str) -> Dict[str, Any]:
 def _build_strategy_a_system_prompt() -> str:
     current_date_iso = datetime.now().date().isoformat()
     return f"""
-You extract structured task information for a calendar planner.
-Today's date is {current_date_iso}.
+    You extract structured task information for a calendar planner.
+    Today's date is {current_date_iso}.
 
-Return exactly one valid JSON object and nothing else.
-Do not use markdown fences.
-Do not add commentary, explanations, or extra keys.
+    Return exactly one valid JSON object and nothing else.
+    Do not use markdown fences.
+    Do not add commentary, explanations, or extra keys.
 
-Required JSON schema:
-{{
-  "title": "string",
-  "deadline": "YYYY-MM-DD",
-  "duration_hours": 1.5,
-  "priority": "high" | "medium" | "low",
-  "preferred_time": "morning" | "afternoon" | "evening" | null
-}}
+    Required JSON schema:
+    {{
+      "title": "string",
+      "deadline": "YYYY-MM-DD",
+      "duration_hours": 1.5,
+      "priority": "high" | "medium" | "low",
+      "preferred_time": "morning" | "afternoon" | "evening" | null,
+      "schedule_on_date": true | false
+  }}
 
-Rules:
-- Resolve relative dates like "Friday", "tomorrow", and "end of week" using today's date.
-- Normalize urgent wording to priority "high".
-- Convert vague durations like "a couple hours" to a reasonable float.
-- If no preferred time is stated, set preferred_time to null.
-- The output must be valid JSON parseable by Python's json.loads.
-""".strip()
+    Rules:
+    - If the user says "on [date]", "this [weekday]", or names a specific day 
+    they want the task to happen, set schedule_on_date to true and deadline 
+    to that exact date.
+    - If the user says "by [date]", "before [date]", "due [date]", or implies 
+    a deadline, set schedule_on_date to false.
+    - Resolve relative dates like "Friday", "tomorrow", "end of week" using today's date.
+    - Normalize urgent wording to priority "high".
+    - Convert vague durations like "a couple hours" to a reasonable float.
+    - If no preferred time is stated, set preferred_time to null.
+    - The output must be valid JSON parseable by Python's json.loads.
+    """.strip()
 
 
 def _build_strategy_b_system_prompt() -> str:
@@ -230,9 +236,11 @@ Today's date is {current_date_iso}.
 Reason through the task internally using this sequence:
 Step 1: Identify the task title.
 Step 2: Identify the deadline and convert any relative dates to YYYY-MM-DD.
-Step 3: Estimate the duration in hours as a float.
-Step 4: Map urgency to one of high, medium, or low.
-Step 5: Map any time preference to morning, afternoon, evening, or null.
+Step 3: Determine if the user wants the task scheduled ON a specific date
+        or BY a deadline — set schedule_on_date accordingly.
+Step 4: Estimate the duration in hours as a float.
+Step 5: Map urgency to one of high, medium, or low.
+Step 6: Map any time preference to morning, afternoon, evening, or null.
 
 Do not reveal your step-by-step reasoning.
 Return exactly one valid JSON object and nothing else.
@@ -245,11 +253,18 @@ Required JSON schema:
   "deadline": "YYYY-MM-DD",
   "duration_hours": 1.5,
   "priority": "high" | "medium" | "low",
-  "preferred_time": "morning" | "afternoon" | "evening" | null
+  "preferred_time": "morning" | "afternoon" | "evening" | null,
+  "schedule_on_date": true | false
 }}
 
 Rules:
-- Resolve relative dates like "Friday", "tomorrow", "before the weekend", and "end of week" using today's date.
+- If the user says "on [date]", "this [weekday]", or names a specific day
+  they want the task to happen, set schedule_on_date to true and deadline
+  to that exact date.
+- If the user says "by [date]", "before [date]", "due [date]", or implies
+  a deadline, set schedule_on_date to false.
+- Resolve relative dates like "Friday", "tomorrow", "before the weekend",
+  and "end of week" using today's date.
 - Normalize urgent wording to priority "high".
 - Convert vague durations like "a couple hours" to a reasonable float.
 - If no preferred time is stated, set preferred_time to null.
@@ -301,12 +316,15 @@ def _task_from_payload(payload: Dict[str, Any]) -> Task:
     if preferred_time not in VALID_PREFERRED_TIMES:
         raise ValueError("Field 'preferred_time' must be morning, afternoon, evening, or null.")
 
+    schedule_on_date = bool(payload.get("schedule_on_date", False))
+
     return Task(
         title=title.strip(),
         deadline=deadline,
         duration_hours=duration_hours,
         priority=priority,
         preferred_time=preferred_time,
+        schedule_on_date=schedule_on_date,
     )
 
 

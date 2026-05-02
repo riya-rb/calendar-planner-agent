@@ -49,6 +49,90 @@ def _event_rows(events: List[Event]) -> List[Dict[str, str]]:
         for event in sorted_events
     ]
 
+def _render_calendar_grid(events: List[Event]) -> None:
+    if not events:
+        st.info("No events to display.")
+        return
+
+    sorted_events = sorted(events, key=lambda e: e.start)
+    today = datetime.now().date()
+    week_start = today - timedelta(days=today.weekday())
+
+    if "week_offset" not in st.session_state:
+        st.session_state.week_offset = 0
+
+    col_prev, col_label, col_next = st.columns([1, 4, 1])
+    with col_prev:
+        if st.button("← Prev"):
+            st.session_state.week_offset -= 1
+    with col_next:
+        if st.button("Next →"):
+            st.session_state.week_offset += 1
+
+    offset_week_start = week_start + timedelta(weeks=st.session_state.week_offset)
+    offset_week_end = offset_week_start + timedelta(days=6)
+
+    with col_label:
+        st.markdown(
+            f"**{offset_week_start.strftime('%b %d')} – {offset_week_end.strftime('%b %d, %Y')}**",
+            unsafe_allow_html=True,
+        )
+
+    days = [offset_week_start + timedelta(days=i) for i in range(7)]
+    day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    cols = st.columns(7)
+
+    for col, day, day_name in zip(cols, days, day_names):
+        with col:
+            is_today = day == today
+            header_style = (
+                "background-color:#1f77b4;color:white;border-radius:6px;"
+                "padding:4px;text-align:center;"
+                if is_today else
+                "background-color:#d0d3d8;color:#1a1a1a;border-radius:6px;"
+                "padding:4px;text-align:center;"
+            )
+            st.markdown(
+                f"<div style='{header_style}'>"
+                f"<b>{day_name}</b><br>{day.strftime('%b %d')}</div>",
+                unsafe_allow_html=True,
+            )
+
+            day_events = [e for e in sorted_events if e.start.date() == day]
+
+            if not day_events:
+                st.markdown(
+                    "<div style='min-height:60px;border:1px dashed #ddd;"
+                    "border-radius:6px;margin-top:4px;'></div>",
+                    unsafe_allow_html=True,
+                )
+                continue
+
+            for event in day_events:
+                title_lower = event.title.lower()
+
+                # always defined defaults
+                color = "#4a4d52"
+                border = "#2c2e32"
+                text = "white"
+
+                if any(k in title_lower for k in ["lecture", "class", "seminar", "lab"]):
+                    color, border = "#1a7a3c", "#0f4d25"
+                elif any(k in title_lower for k in ["gym", "groceries", "doctor", "study", "finish", "write", "submit", "prepare", "work", "research", "draft", "review"]):
+                    color, border = "#b07d00", "#7a5600"
+                elif any(k in title_lower for k in ["meeting", "sync", "review", "planning", "sprint", "check-in", "office hours", "advisor", "group"]):
+                    color, border = "#0056b3", "#003580"
+
+                st.markdown(
+                    f"<div style='background:{color};border-left:3px solid {border};"
+                    f"border-radius:4px;padding:4px 6px;margin-top:4px;"
+                    f"font-size:11px;color:{text};'>"
+                    f"<b>{event.title[:22]}{'…' if len(event.title) > 22 else ''}</b><br>"
+                    f"{event.start.strftime('%H:%M')}–{event.end.strftime('%H:%M')}"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
 
 def _render_schedule_tab() -> None:
     st.subheader("Schedule a Task")
@@ -85,35 +169,45 @@ def _render_schedule_tab() -> None:
                         st.error("No slot was found before the deadline.")
                     else:
                         st.success(
-                            "Scheduled: "
-                            f"{scheduled_event.title} on {scheduled_event.start.strftime('%Y-%m-%d')} "
+                            f"✅ Scheduled: **{scheduled_event.title}** on "
+                            f"{scheduled_event.start.strftime('%A %b %d')} "
                             f"from {scheduled_event.start.strftime('%H:%M')} "
                             f"to {scheduled_event.end.strftime('%H:%M')}"
                         )
 
     if st.session_state.last_parsed_task is not None:
         task = st.session_state.last_parsed_task
-        st.info(
-            "\n".join(
-                [
-                    f"Title: {task.title}",
-                    f"Deadline: {task.deadline.strftime('%Y-%m-%d %H:%M')}",
-                    f"Duration (hours): {task.duration_hours}",
-                    f"Priority: {task.priority}",
-                    f"Preferred time: {task.preferred_time or 'None'}",
-                ]
-            )
-        )
+        with st.expander("Parsed task details", expanded=True):
+            c1, c2, c3, c4, c5 = st.columns(5)
+            c1.metric("Title", task.title[:20])
+            c2.metric("Deadline", task.deadline.strftime("%b %d"))
+            c3.metric("Duration", f"{task.duration_hours}h")
+            c4.metric("Priority", task.priority.capitalize())
+            c5.metric("Preference", task.preferred_time or "None")
 
-    if st.button("Reset calendar"):
-        st.session_state.live_events = _load_initial_events()
-        st.session_state.last_parsed_task = None
-        st.session_state.last_scheduled_event = None
-        st.success("Calendar reset to the synthetic baseline.")
+    col1, col2 = st.columns([1, 5])
+    with col1:
+        if st.button("Reset calendar"):
+            st.session_state.live_events = _load_initial_events()
+            st.session_state.last_parsed_task = None
+            st.session_state.last_scheduled_event = None
+            st.session_state.week_offset = 0
+            st.success("Reset.")
 
-    st.markdown("### Current calendar")
-    st.dataframe(_event_rows(st.session_state.live_events), use_container_width=True)
+    st.markdown("### Calendar")
 
+    # color legend
+    st.markdown(
+        """<div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:12px;'>
+        <span style='background:#1a7a3c;color:white;border-left:3px solid #0f4d25;padding:2px 8px;border-radius:4px;'>Lectures</span>
+        <span style='background:#0056b3;color:white;border-left:3px solid #003580;padding:2px 8px;border-radius:4px;'>Meetings</span>
+        <span style='background:#b07d00;color:white;border-left:3px solid #7a5600;padding:2px 8px;border-radius:4px;'>Personal</span>
+        <span style='background:#4a4d52;color:white;border-left:3px solid #2c2e32;padding:2px 8px;border-radius:4px;'>Other</span>
+        </div>""",
+        unsafe_allow_html=True,
+    )
+
+    _render_calendar_grid(st.session_state.live_events)
 
 def _render_evaluation_tab() -> None:
     st.subheader("Evaluation")

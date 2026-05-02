@@ -1,5 +1,5 @@
 [
-  {"id": "e1", "title": "Gym", "start": "2026-04-21T07:00:00", "end": "2026-04-21T08:00:00", "recurring": false},
+  {"id": "e1", "title": "Gym", "start": "2026-04-21T07:00:00", "end": "2026-04-21T08:00:00", "recurring": true},
   {"id": "e2", "title": "Coffee Chat with TA", "start": "2026-04-21T10:00:00", "end": "2026-04-21T10:30:00", "recurring": false},
   {"id": "e3", "title": "HCI Project Sync", "start": "2026-04-21T13:00:00", "end": "2026-04-21T14:00:00", "recurring": false},
   {"id": "e4", "title": "Lab Meeting", "start": "2026-04-21T14:00:00", "end": "2026-04-21T15:00:00", "recurring": false},
@@ -14,7 +14,7 @@
   {"id": "e11", "title": "ML Project Meeting", "start": "2026-04-23T14:00:00", "end": "2026-04-23T15:00:00", "recurring": false},
   {"id": "e12", "title": "TA Office Hours", "start": "2026-04-23T15:30:00", "end": "2026-04-23T17:00:00", "recurring": false},
 
-  {"id": "e13", "title": "Gym", "start": "2026-04-24T07:00:00", "end": "2026-04-24T08:00:00", "recurring": false},
+  {"id": "e13", "title": "Gym", "start": "2026-04-24T07:00:00", "end": "2026-04-24T08:00:00", "recurring": true},
   {"id": "e14", "title": "CS6740 Lecture", "start": "2026-04-24T09:00:00", "end": "2026-04-24T10:30:00", "recurring": true},
   {"id": "e15", "title": "Lunch Check-in", "start": "2026-04-24T12:00:00", "end": "2026-04-24T13:00:00", "recurring": false},
   {"id": "e16", "title": "Study Group", "start": "2026-04-24T15:00:00", "end": "2026-04-24T16:30:00", "recurring": false},
@@ -26,20 +26,108 @@
   {"id": "e20", "title": "Faculty Office Hours", "start": "2026-04-27T13:00:00", "end": "2026-04-27T14:00:00", "recurring": false},
   {"id": "e21", "title": "Reading Group", "start": "2026-04-27T14:00:00", "end": "2026-04-27T15:00:00", "recurring": false},
 
-  {"id": "e22", "title": "Gym", "start": "2026-04-28T07:00:00", "end": "2026-04-28T08:00:00", "recurring": false},
-  {"id": "e23", "title": "Research Block", "start": "2026-04-28T10:00:00", "end": "2026-04-28T11:00:00", "recurring": false},
+  {"id": "e22", "title": "Gym", "start": "2026-04-28T07:00:00", "end": "2026-04-28T08:00:00", "recurring": true},
+  {"id": "e23", "title": "TA session", "start": "2026-04-28T09:00:00", "end": "2026-04-28T11:30:00", "recurring": false},
   {"id": "e24", "title": "Product Sync", "start": "2026-04-28T13:00:00", "end": "2026-04-28T14:00:00", "recurring": false},
   {"id": "e25", "title": "Project Review", "start": "2026-04-28T14:00:00", "end": "2026-04-28T15:00:00", "recurring": false},
 
-  {"id": "e26", "title": "CS6740 Lecture", "start": "2026-04-29T09:00:00", "end": "2026-04-29T10:30:00", "recurring": true},
+  {"id": "e26", "title": "Morning review", "start": "2026-04-29T08:30:00", "end": "2026-04-29T10:00:00", "recurring": false},
+  {"id": "e27", "title": "CS6740 Lecture", "start": "2026-04-29T09:00:00", "end": "2026-04-29T10:30:00", "recurring": true},
 
-  {"id": "e27", "title": "Doctor Appointment", "start": "2026-04-30T10:00:00", "end": "2026-04-30T11:00:00", "recurring": false},
-  {"id": "e28", "title": "Design Sprint", "start": "2026-04-30T13:00:00", "end": "2026-04-30T14:00:00", "recurring": false},
-  {"id": "e29", "title": "Partner Meeting", "start": "2026-04-30T14:00:00", "end": "2026-04-30T15:00:00", "recurring": false},
+  {"id": "e28", "title": "Gym", "start": "2026-04-30T07:00:00", "end": "2026-04-30T08:00:00", "recurring": true},
+  {"id": "e29", "title": "Advisor meeting", "start": "2026-04-30T09:00:00", "end": "2026-04-30T10:30:00", "recurring": false},
+  {"id": "e30", "title": "Doctor Appointment", "start": "2026-04-30T10:00:00", "end": "2026-04-30T11:00:00", "recurring": false},
+  {"id": "e31", "title": "Design Sprint", "start": "2026-04-30T13:00:00", "end": "2026-04-30T14:00:00", "recurring": false},
+  {"id": "e32", "title": "Partner Meeting", "start": "2026-04-30T14:00:00", "end": "2026-04-30T15:00:00", "recurring": false},
 
-  {"id": "e30", "title": "CS6740 Lecture", "start": "2026-05-01T09:00:00", "end": "2026-05-01T10:30:00", "recurring": true},
-  {"id": "e31", "title": "Research reading block", "start": "2026-04-27T08:00:00", "end": "2026-04-27T11:00:00", "recurring": false},
-  {"id": "e32", "title": "TA session", "start": "2026-04-28T09:00:00", "end": "2026-04-28T11:30:00", "recurring": false},
-  {"id": "e33", "title": "Morning review", "start": "2026-04-29T08:30:00", "end": "2026-04-29T10:00:00", "recurring": false},
-  {"id": "e34", "title": "Advisor meeting", "start": "2026-04-30T09:00:00", "end": "2026-04-30T10:30:00", "recurring": false}
+  {"id": "e33", "title": "CS6740 Lecture", "start": "2026-05-01T09:00:00", "end": "2026-05-01T10:30:00", "recurring": true},
+
+  {"id": "e34", "title": "CS6740 Lecture", "start": "2026-05-04T09:00:00", "end": "2026-05-04T10:30:00", "recurring": true},
+
+  {"id": "e35", "title": "Gym", "start": "2026-05-05T07:00:00", "end": "2026-05-05T08:00:00", "recurring": true},
+  {"id": "e36", "title": "All Day Workshop", "start": "2026-05-05T08:00:00", "end": "2026-05-05T13:00:00", "recurring": false},
+  {"id": "e37", "title": "Lab Meeting", "start": "2026-05-05T14:00:00", "end": "2026-05-05T15:00:00", "recurring": false},
+  {"id": "e38", "title": "Evening Seminar", "start": "2026-05-05T17:00:00", "end": "2026-05-05T21:00:00", "recurring": false},
+
+  {"id": "e39", "title": "Research Symposium", "start": "2026-05-06T08:00:00", "end": "2026-05-06T12:00:00", "recurring": false},
+  {"id": "e40", "title": "Department Seminar", "start": "2026-05-06T13:00:00", "end": "2026-05-06T16:00:00", "recurring": false},
+  {"id": "e41", "title": "Study Group", "start": "2026-05-06T16:30:00", "end": "2026-05-06T19:00:00", "recurring": false},
+
+  {"id": "e42", "title": "Gym", "start": "2026-05-07T07:00:00", "end": "2026-05-07T08:00:00", "recurring": true},
+  {"id": "e43", "title": "Research Sync", "start": "2026-05-07T11:00:00", "end": "2026-05-07T12:00:00", "recurring": false},
+  {"id": "e44", "title": "TA Office Hours", "start": "2026-05-07T15:30:00", "end": "2026-05-07T17:00:00", "recurring": false},
+
+  {"id": "e45", "title": "CS6740 Lecture", "start": "2026-05-08T09:00:00", "end": "2026-05-08T10:30:00", "recurring": true},
+  {"id": "e46", "title": "Project Check-in", "start": "2026-05-08T13:00:00", "end": "2026-05-08T14:00:00", "recurring": false},
+  {"id": "e47", "title": "Study Group", "start": "2026-05-08T15:00:00", "end": "2026-05-08T16:30:00", "recurring": false},
+
+  {"id": "e48", "title": "CS6740 Lecture", "start": "2026-05-11T09:00:00", "end": "2026-05-11T10:30:00", "recurring": true},
+  {"id": "e49", "title": "Advisor Meeting", "start": "2026-05-11T11:00:00", "end": "2026-05-11T12:00:00", "recurring": false},
+  {"id": "e50", "title": "Data Science Seminar", "start": "2026-05-11T14:00:00", "end": "2026-05-11T15:00:00", "recurring": false},
+
+  {"id": "e51", "title": "Gym", "start": "2026-05-12T07:00:00", "end": "2026-05-12T08:00:00", "recurring": true},
+  {"id": "e52", "title": "Sprint Planning", "start": "2026-05-12T10:00:00", "end": "2026-05-12T11:00:00", "recurring": false},
+  {"id": "e53", "title": "Lab Meeting", "start": "2026-05-12T13:00:00", "end": "2026-05-12T14:00:00", "recurring": false},
+  {"id": "e54", "title": "Reading Group", "start": "2026-05-12T15:00:00", "end": "2026-05-12T16:00:00", "recurring": false},
+
+  {"id": "e55", "title": "CS6740 Lecture", "start": "2026-05-13T09:00:00", "end": "2026-05-13T10:30:00", "recurring": true},
+  {"id": "e56", "title": "HCI Project Sync", "start": "2026-05-13T13:00:00", "end": "2026-05-13T14:00:00", "recurring": false},
+
+  {"id": "e57", "title": "Gym", "start": "2026-05-14T07:00:00", "end": "2026-05-14T08:00:00", "recurring": true},
+  {"id": "e58", "title": "TA Office Hours", "start": "2026-05-14T10:00:00", "end": "2026-05-14T11:30:00", "recurring": false},
+  {"id": "e59", "title": "Product Sync", "start": "2026-05-14T14:00:00", "end": "2026-05-14T15:00:00", "recurring": false},
+
+  {"id": "e60", "title": "CS6740 Lecture", "start": "2026-05-15T09:00:00", "end": "2026-05-15T10:30:00", "recurring": true},
+  {"id": "e61", "title": "Design Review", "start": "2026-05-15T13:00:00", "end": "2026-05-15T14:00:00", "recurring": false},
+
+  {"id": "e62", "title": "CS6740 Lecture", "start": "2026-05-18T09:00:00", "end": "2026-05-18T10:30:00", "recurring": true},
+  {"id": "e63", "title": "Advisor Meeting", "start": "2026-05-18T11:00:00", "end": "2026-05-18T12:00:00", "recurring": false},
+  {"id": "e64", "title": "Project Review", "start": "2026-05-18T14:00:00", "end": "2026-05-18T15:00:00", "recurring": false},
+
+  {"id": "e65", "title": "Gym", "start": "2026-05-19T07:00:00", "end": "2026-05-19T08:00:00", "recurring": true},
+  {"id": "e66", "title": "Research Block", "start": "2026-05-19T10:00:00", "end": "2026-05-19T11:30:00", "recurring": false},
+  {"id": "e67", "title": "Reading Group", "start": "2026-05-19T14:00:00", "end": "2026-05-19T15:00:00", "recurring": false},
+
+  {"id": "e68", "title": "CS6740 Lecture", "start": "2026-05-20T09:00:00", "end": "2026-05-20T10:30:00", "recurring": true},
+  {"id": "e69", "title": "Sprint Planning", "start": "2026-05-20T13:00:00", "end": "2026-05-20T14:00:00", "recurring": false},
+
+  {"id": "e70", "title": "Gym", "start": "2026-05-21T07:00:00", "end": "2026-05-21T08:00:00", "recurring": true},
+  {"id": "e71", "title": "TA Session", "start": "2026-05-21T09:00:00", "end": "2026-05-21T11:00:00", "recurring": false},
+  {"id": "e72", "title": "TA Office Hours", "start": "2026-05-21T15:30:00", "end": "2026-05-21T17:00:00", "recurring": false},
+
+  {"id": "e73", "title": "CS6740 Lecture", "start": "2026-05-22T09:00:00", "end": "2026-05-22T10:30:00", "recurring": true},
+  {"id": "e74", "title": "Faculty Office Hours", "start": "2026-05-22T13:00:00", "end": "2026-05-22T14:00:00", "recurring": false},
+
+  {"id": "e75", "title": "Gym", "start": "2026-05-26T07:00:00", "end": "2026-05-26T08:00:00", "recurring": true},
+  {"id": "e76", "title": "Lab Meeting", "start": "2026-05-26T10:00:00", "end": "2026-05-26T11:00:00", "recurring": false},
+  {"id": "e77", "title": "Lab Meeting", "start": "2026-05-26T14:00:00", "end": "2026-05-26T15:00:00", "recurring": false},
+
+  {"id": "e78", "title": "CS6740 Lecture", "start": "2026-05-27T09:00:00", "end": "2026-05-27T10:30:00", "recurring": true},
+  {"id": "e79", "title": "Design Review", "start": "2026-05-27T13:00:00", "end": "2026-05-27T14:00:00", "recurring": false},
+  {"id": "e80", "title": "Research Sync", "start": "2026-05-27T15:00:00", "end": "2026-05-27T16:00:00", "recurring": false},
+
+  {"id": "e81", "title": "Gym", "start": "2026-05-28T07:00:00", "end": "2026-05-28T08:00:00", "recurring": true},
+  {"id": "e82", "title": "Partner Meeting", "start": "2026-05-28T11:00:00", "end": "2026-05-28T12:00:00", "recurring": false},
+
+  {"id": "e83", "title": "CS6740 Lecture", "start": "2026-05-29T09:00:00", "end": "2026-05-29T10:30:00", "recurring": true},
+  {"id": "e84", "title": "HCI Project Sync", "start": "2026-05-29T14:00:00", "end": "2026-05-29T15:00:00", "recurring": false},
+
+  {"id": "e85", "title": "CS6740 Lecture", "start": "2026-06-01T09:00:00", "end": "2026-06-01T10:30:00", "recurring": true},
+  {"id": "e86", "title": "Advisor Meeting", "start": "2026-06-01T11:00:00", "end": "2026-06-01T12:00:00", "recurring": false},
+
+  {"id": "e87", "title": "Gym", "start": "2026-06-02T07:00:00", "end": "2026-06-02T08:00:00", "recurring": true},
+  {"id": "e88", "title": "Sprint Planning", "start": "2026-06-02T10:00:00", "end": "2026-06-02T11:00:00", "recurring": false},
+  {"id": "e89", "title": "Reading Group", "start": "2026-06-02T14:00:00", "end": "2026-06-02T15:00:00", "recurring": false},
+
+  {"id": "e90", "title": "CS6740 Lecture", "start": "2026-06-03T09:00:00", "end": "2026-06-03T10:30:00", "recurring": true},
+  {"id": "e91", "title": "Advisor Meeting", "start": "2026-06-03T11:00:00", "end": "2026-06-03T12:00:00", "recurring": false},
+  {"id": "e92", "title": "Project Review", "start": "2026-06-03T14:00:00", "end": "2026-06-03T15:00:00", "recurring": false},
+
+  {"id": "e93", "title": "Gym", "start": "2026-06-04T07:00:00", "end": "2026-06-04T08:00:00", "recurring": true},
+  {"id": "e94", "title": "TA Office Hours", "start": "2026-06-04T15:30:00", "end": "2026-06-04T17:00:00", "recurring": false},
+  {"id": "e95", "title": "Design Sprint", "start": "2026-06-04T10:00:00", "end": "2026-06-04T11:30:00", "recurring": false},
+
+  {"id": "e96", "title": "CS6740 Lecture", "start": "2026-06-05T09:00:00", "end": "2026-06-05T10:30:00", "recurring": true},
+  {"id": "e97", "title": "Lab Meeting", "start": "2026-06-05T13:00:00", "end": "2026-06-05T14:00:00", "recurring": false},
+  {"id": "e98", "title": "Study Group", "start": "2026-06-05T15:00:00", "end": "2026-06-05T16:30:00", "recurring": false}
 ]

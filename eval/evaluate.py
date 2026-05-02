@@ -249,12 +249,7 @@ def _run_strategy_comparison(scenarios: List[Dict[str, Any]]) -> Dict[str, Any]:
             "name": strategy_name,
             "priority_accuracy": _pct(sum(1 for row in rows if row["priority_match"]), len(rows)),
             "duration_accuracy": _pct(sum(1 for row in rows if row["duration_match"]), len(rows)),
-            "deadline_accuracy": _pct(sum(1 for row in rows if row["deadline_match"]), len(rows)),
             "overall_accuracy": _pct(sum(1 for row in rows if row["overall_match"]), len(rows)),
-            "ambiguous_input_accuracy": _pct(
-                sum(1 for row in ambiguous_rows if row["overall_match"]),
-                len(ambiguous_rows),
-            ),
             "rows": rows,
         }
 
@@ -275,21 +270,11 @@ def _run_strategy_comparison(scenarios: List[Dict[str, Any]]) -> Dict[str, Any]:
         f"{_fmt_pct(strategy_a['duration_accuracy']):<10} | "
         f"{_fmt_pct(strategy_b['duration_accuracy'])}"
     )
-    print(
-        f"{'Deadline acc.':<14} | "
-        f"{_fmt_pct(strategy_a['deadline_accuracy']):<10} | "
-        f"{_fmt_pct(strategy_b['deadline_accuracy'])}"
-    )
-    print(
-        f"{'Overall':<14} | "
-        f"{_fmt_pct(strategy_a['overall_accuracy']):<10} | "
-        f"{_fmt_pct(strategy_b['overall_accuracy'])}"
-    )
-    print(
-        f"{'Ambiguous cat.':<14} | "
-        f"{_fmt_pct(strategy_a['ambiguous_input_accuracy']):<10} | "
-        f"{_fmt_pct(strategy_b['ambiguous_input_accuracy'])}"
-    )
+    #print(
+    #    f"{'Overall':<14} | "
+    #    f"{_fmt_pct(strategy_a['overall_accuracy']):<10} | "
+    #    f"{_fmt_pct(strategy_b['overall_accuracy'])}"
+    #)
 
     return {
         "timestamp": datetime.now().isoformat(),

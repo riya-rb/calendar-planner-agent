@@ -60,7 +60,7 @@
     "existing_events": ["e27", "e28", "e29"],
     "task_input": "Submit the lab reflection by noon today, 1 hour, urgent, prefer evenings.",
     "expected": {
-      "deadline": "2026-05-01T12:00:00",
+      "deadline": "2026-05-05T12:00:00",
       "duration_hours": 1.0,
       "priority": "high",
       "preferred_time": "evening",
